@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>پیش‌بینی دلار</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; max-width: 800px; margin: auto; padding: 20px; background: #f0f2f5; }
+        .container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        textarea { width: 100%; height: 150px; padding: 10px; font-size: 14px; border-radius: 8px; border: 1px solid #ccc; }
+        button { background: #0088cc; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        .result { margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 10px; }
+        .price { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .bad { color: red; }
+        .good { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📈 تحلیل اخبار و پیش‌بینی قیمت دلار</h1>
+        <form method="post">
+            <label>لینک‌های خبری (هر لینک در یک خط):</label>
+            <textarea name="urls" placeholder="https://example.com/news1&#10;https://example.com/news2"></textarea>
+            <button type="submit">تحلیل و پیش‌بینی</button>
+        </form>
+        
+        {% if error %}
+            <div class="result" style="color:red;">{{ error }}</div>
+        {% endif %}
+        
+        {% if instant %}
+        <div class="result">
+            <h3>نتایج تحلیل</h3>
+            <p>📰 تعداد اخبار پردازش شده: {{ news_count }}</p>
+            <p>🧠 امتیاز احساسات: <strong>{{ sentiment }}</strong> 
+                {% if sentiment|float > 0 %} (مثبت = کاهش قیمت) 
+                {% elif sentiment|float < 0 %} (منفی = افزایش قیمت) 
+                {% else %} (خنثی) {% endif %}
+            </p>
+            <hr>
+            <p>💰 <span class="price">قیمت لحظه‌ای دلار: {{ "{:,.0f}".format(instant) }} تومان</span></p>
+            <p>📅 پیش‌بینی قیمت فردا: <strong>{{ "{:,.0f}".format(tomorrow) }} تومان</strong></p>
+            <p>📊 پیش‌بینی ۷ روز آینده:</p>
+            <ul>
+                {% for p in weekly %}
+                <li>روز {{ loop.index }}: {{ "{:,.0f}".format(p) }} تومان</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
